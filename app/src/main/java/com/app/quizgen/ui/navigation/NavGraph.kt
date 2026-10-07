@@ -39,7 +39,14 @@ fun NavGraph(
             )
         }
         composable(Screen.Config.route) {
-            Text(text = "Config Screen Placeholder")
+            com.app.quizgen.ui.screens.QuizConfigScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToQuizView = { quizId ->
+                    navController.navigate(Screen.QuizView.route) {
+                        popUpTo(Screen.Dashboard.route)
+                    }
+                }
+            )
         }
         composable(Screen.QuizView.route) {
             Text(text = "Quiz View Screen Placeholder")
