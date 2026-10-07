@@ -27,8 +27,10 @@ fun NavGraph(
         modifier = modifier
     ) {
         composable(Screen.Dashboard.route) {
-            // TODO: Navigate to upload using navController.navigate(Screen.Upload.route)
-            Text(text = "Dashboard Screen Placeholder")
+            com.app.quizgen.ui.screens.DashboardScreen(
+                onNavigateToUpload = { navController.navigate(Screen.Upload.route) },
+                onNavigateToQuizView = { quizId -> navController.navigate(Screen.QuizView.route) }
+            )
         }
         composable(Screen.Upload.route) {
             Text(text = "Upload Screen Placeholder")
