@@ -49,7 +49,10 @@ fun NavGraph(
             )
         }
         composable(Screen.QuizView.route) {
-            Text(text = "Quiz View Screen Placeholder")
+            com.app.quizgen.ui.screens.QuizViewScreen(
+                quizId = "mock_quiz_id", // Mapped with arguments in actual wiring phase
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }
