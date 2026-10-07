@@ -21,8 +21,8 @@ import javax.inject.Singleton
  * See: database_schema_specifications.md — Section 1 (Storage Strategy)
  */
 @Singleton
-class FileStorageManager @Inject constructor(
-    @ApplicationContext private val context: Context
+open class FileStorageManager @Inject constructor(
+    @ApplicationContext private val context: Context? = null
 ) {
 
     companion object {
@@ -40,14 +40,14 @@ class FileStorageManager @Inject constructor(
      * @return The local file URI (file:// path) pointing to the stored copy.
      * @throws FileStorageException if the copy operation fails.
      */
-    suspend fun saveFile(contentUri: Uri, originalFileName: String): String {
+    open suspend fun saveFile(contentUri: Uri, originalFileName: String): String {
         return withContext(Dispatchers.IO) {
             try {
                 val uploadDir = getUploadDirectory()
                 val uniqueFileName = "${UUID.randomUUID()}_$originalFileName"
                 val destinationFile = File(uploadDir, uniqueFileName)
 
-                val inputStream: InputStream = context.contentResolver.openInputStream(contentUri)
+                val inputStream: InputStream = context?.contentResolver?.openInputStream(contentUri)
                     ?: throw FileStorageException("Cannot open file: $contentUri")
 
                 inputStream.use { input ->
@@ -71,7 +71,7 @@ class FileStorageManager @Inject constructor(
      * @param fileUri The local file URI string (as stored in StudyMaterialEntity.fileUri).
      * @return An [InputStream] for reading the file content.
      */
-    suspend fun openFile(fileUri: String): InputStream {
+    open suspend fun openFile(fileUri: String): InputStream {
         return withContext(Dispatchers.IO) {
             try {
                 val file = File(java.net.URI(fileUri))
@@ -93,7 +93,7 @@ class FileStorageManager @Inject constructor(
      * @param fileUri The local file URI string.
      * @return true if the file was successfully deleted, false otherwise.
      */
-    suspend fun deleteFile(fileUri: String): Boolean {
+    open suspend fun deleteFile(fileUri: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val file = File(java.net.URI(fileUri))
@@ -110,9 +110,9 @@ class FileStorageManager @Inject constructor(
      * @param contentUri The content:// URI from the file picker.
      * @return File size in bytes, or -1 if it cannot be determined.
      */
-    fun getFileSize(contentUri: Uri): Long {
+    open fun getFileSize(contentUri: Uri): Long {
         return try {
-            context.contentResolver.openAssetFileDescriptor(contentUri, "r")?.use {
+            context?.contentResolver?.openAssetFileDescriptor(contentUri, "r")?.use {
                 it.length
             } ?: -1L
         } catch (e: Exception) {
@@ -126,8 +126,8 @@ class FileStorageManager @Inject constructor(
      * @param contentUri The content:// URI.
      * @return The display name of the file, or "unknown_file" if not found.
      */
-    fun getFileName(contentUri: Uri): String {
-        val cursor = context.contentResolver.query(contentUri, null, null, null, null)
+    open fun getFileName(contentUri: Uri): String {
+        val cursor = context?.contentResolver?.query(contentUri, null, null, null, null)
         return cursor?.use {
             if (it.moveToFirst()) {
                 val nameIndex = it.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)

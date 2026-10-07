@@ -11,11 +11,17 @@ import javax.inject.Singleton
  * Injected via Hilt with all three parser implementations.
  */
 @Singleton
-class FileParserFactory @Inject constructor(
+open class FileParserFactory @Inject constructor(
     private val pdfTextExtractor: PdfTextExtractor,
     private val docxTextExtractor: DocxTextExtractor,
     private val txtTextExtractor: TxtTextExtractor
 ) {
+
+    constructor() : this(
+        PdfTextExtractor(),
+        DocxTextExtractor(),
+        TxtTextExtractor()
+    )
 
     /**
      * Returns the appropriate [TextExtractor] for the given file type.
@@ -24,7 +30,7 @@ class FileParserFactory @Inject constructor(
      * @return The matching [TextExtractor] implementation.
      * @throws TextExtractionException if the file type is not supported.
      */
-    fun getExtractor(fileType: String): TextExtractor {
+    open fun getExtractor(fileType: String): TextExtractor {
         return when (fileType.uppercase()) {
             "PDF" -> pdfTextExtractor
             "DOCX" -> docxTextExtractor
@@ -40,7 +46,7 @@ class FileParserFactory @Inject constructor(
      * @param inputStream The file's input stream.
      * @return Extracted plain text.
      */
-    suspend fun extractText(fileType: String, inputStream: InputStream): String {
+    open suspend fun extractText(fileType: String, inputStream: InputStream): String {
         val extractor = getExtractor(fileType)
         return extractor.extractText(inputStream)
     }
