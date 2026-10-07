@@ -9,6 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import com.app.quizgen.ui.navigation.NavGraph
+import com.app.quizgen.ui.theme.QuizGenTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -21,13 +23,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MaterialTheme {
+            QuizGenTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.background
                 ) {
-                    // TODO: Replace with NavGraph once Dev 2 builds navigation
-                    Text(text = "AI Quiz Generator — Backend Ready")
+                    NavGraph()
                 }
             }
         }
