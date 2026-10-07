@@ -33,7 +33,10 @@ fun NavGraph(
             )
         }
         composable(Screen.Upload.route) {
-            Text(text = "Upload Screen Placeholder")
+            com.app.quizgen.ui.screens.UploadScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToConfig = { navController.navigate(Screen.Config.route) }
+            )
         }
         composable(Screen.Config.route) {
             Text(text = "Config Screen Placeholder")
